@@ -22,11 +22,10 @@ class HockeyNLCard extends HTMLElement {
           justify-content: space-between;
           align-items: center;
           border-style: solid;
-          border-width: 1px;
-          border-radius: 12px;
+          border-width: var(--ha-card-border-width,1px);
+          border-radius: var(--ha-card-border-radius,12px);
           padding: 5px 0px;
           border-color: var(--divider-color,#e0e0e0);
-          background-color:  rgba(0, 50, 120, 0.1);
         }
 
         .team {
