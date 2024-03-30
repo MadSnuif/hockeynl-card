@@ -3,17 +3,20 @@ class HockeyNLCard extends HTMLElement {
   // update your content.
   set hass(hass) {
     // Initialize the content if it's not there yet.
+    const config = this.config;
+    const entityIdArray = config.entities; // Array of strings "sensor.sensor1", "sensor.sensor2"
     if (!this.content) {
+
+      const title = this.title; // Card title
       this.innerHTML = `
-        <ha-card header="Hockey wedstrijden">
+        <ha-card header="${title}">
           <div class="card-content"></div>
         </ha-card>
       `;
       this.content = this.querySelector("div");
     }
 
-    const config = this.config;
-   const entityIdArray = config.entities; // Array of strings "sensor.sensor1", "sensor.sensor2"
+
 
     this.content.innerHTML = `
       <style>
@@ -26,6 +29,7 @@ class HockeyNLCard extends HTMLElement {
           border-radius: var(--ha-card-border-radius,12px);
           padding: 5px 0px;
           border-color: var(--divider-color,#e0e0e0);
+          margin: 5px; /* seperation between the entities */
         }
 
         .team {
@@ -62,24 +66,22 @@ class HockeyNLCard extends HTMLElement {
         .match-time {
           text-align: center;
         }
-
     </style>
     `;
-      entityIdArray.forEach(entityId => {
-        const curState = hass.states[entityId];
-        const date = new Date(curState.attributes.datetime)
-        const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-        const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
-        const homeTeamClubParts = curState.attributes.home_team.name.split(" ")
-        const homeTeamName = homeTeamClubParts.pop()
-        const homeTeamClub = homeTeamClubParts.join(" ")
-        const awayTeamClubParts = curState.attributes.away_team.name.split(" ")
-        const awayTeamName = awayTeamClubParts.pop()
-        const awayTeamClub = awayTeamClubParts.join(" ")
+    entityIdArray.forEach(entityId => {
+      const curState = hass.states[entityId];
+      const date = new Date(curState.attributes.datetime)
+      const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+      const homeTeamClubParts = curState.attributes.home_team.name.split(" ")
+      const homeTeamName = homeTeamClubParts.pop()
+      const homeTeamClub = homeTeamClubParts.join(" ")
+      const awayTeamClubParts = curState.attributes.away_team.name.split(" ")
+      const awayTeamName = awayTeamClubParts.pop()
+      const awayTeamClub = awayTeamClubParts.join(" ")
 
 
-        this.content.innerHTML += `
-        <br>
+      this.content.innerHTML += `
         <div class="team-container">
           <div class="team">
             <img src="${curState.attributes.home_team.logo}" class="team-logo" alt="Home Team Logo">
@@ -98,20 +100,18 @@ class HockeyNLCard extends HTMLElement {
             <div class="team-name">${awayTeamName}<div>
           </div>
         </div>
-          `
-      });
-
-    }
-
-
+      `});
+  }
 
     // The user supplied configuration. Throw an exception and Home Assistant
     // will render an error card.
   setConfig(config) {
-      if (!config.entities || !Array.isArray(config.entities) || config.entities.length === 0) {
-          throw new Error('You need to define an array of entities');
-      }
-      this.config = config;
+    if (!config.entities || !Array.isArray(config.entities) || config.entities.length === 0) {
+        throw new Error('You need to define an array of entities');
+    }
+    this.title = config.title ?? "Hockey wedstrijden";
+
+    this.config = config;
   }
 
     // The height of your card. Home Assistant uses this to automatically
