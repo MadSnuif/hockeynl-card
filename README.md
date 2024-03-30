@@ -20,12 +20,23 @@ In Home Assistant add on your page a new card, and choose custom: HockeyNL Card
 Add the sensors in code in the card:
 for example two team sensors will need:
 
+```
 type: custom:hockeynl-card
 entities:
-  - sensor.gouda_heren_1
-  - sensor.gouda_dames_1
-
+   - sensor.gouda_heren_1
+   - sensor.gouda_dames_1
+```
 
 ![alt text](image-5.png)
+## New in 1.02 
+You can now change the card title with the added line title: in de card configuration. By setting title: '' (empty string) you can remove the title from the card.
+Example:
+```
+type: custom:hockeynl-card
+title: 'My Name'
+entities:
+   - sensor.gouda_heren_1
+   - sensor.gouda_dames_1
+```
 
 Enjoy the card!
