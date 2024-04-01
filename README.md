@@ -20,10 +20,12 @@ In Home Assistant add on your page a new card, and choose custom: HockeyNL Card
 Add the sensors in code in the card:
 for example two team sensors will need:
 
+```yaml
 type: custom:hockeynl-card
 entities:
   - sensor.gouda_heren_1
   - sensor.gouda_dames_1
+```
 
 
 ![alt text](image-5.png)
