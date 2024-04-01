@@ -26,7 +26,7 @@ class HockeyNLCard extends HTMLElement {
           align-items: center;
           border-style: solid;
           border-width: var(--ha-card-border-width,1px);
-          border-radius: var(--ha-card-border-radius,12px);
+          border-radius: 12px; /*border-radius: var(--ha-card-border-radius,12px);*/
           padding: 5px 0px;
           border-color: var(--divider-color,#e0e0e0);
           margin: 5px; /* seperation between the entities */
