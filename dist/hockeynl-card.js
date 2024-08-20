@@ -25,11 +25,11 @@ class HockeyNLCard extends HTMLElement {
           justify-content: space-between;
           align-items: center;
           border-style: solid;
-          border-width: 1px /* var(--ha-card-border-width,1px); */
-          border-radius: 12px; /*border-radius: var(--ha-card-border-radius,12px);*/
-          padding: 5px 0px;
-          border-color: var(--divider-color,#e0e0e0);
-          margin: 5px; /* seperation between the entities */
+          border-width: 1px; /*var(--ha-card-border-width,1px); */
+          border-radius: 12px; /* var(--ha-card-border-radius,12px);*/
+          padding: 4px 2px;
+          border-color: #6e6e6e;  /*var(--divider-color,#e0e0e0);*/
+          margin: 4px; /* seperation between the entities */
         }
 
         .team {
@@ -71,7 +71,7 @@ class HockeyNLCard extends HTMLElement {
     entityIdArray.forEach(entityId => {
       const curState = hass.states[entityId];
       const date = new Date(curState.attributes.datetime)
-      const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getFullYear()).padStart(2, '0')}`
       const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
       const homeTeamClubParts = curState.attributes.home_team.name.split(" ")
       const homeTeamName = homeTeamClubParts.pop()
