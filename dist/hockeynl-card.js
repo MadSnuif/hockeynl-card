@@ -6,7 +6,6 @@ class HockeyNLCard extends HTMLElement {
     const config = this.config;
     const entityIdArray = config.entities; // Array of strings "sensor.sensor1", "sensor.sensor2"
     if (!this.content) {
-
       const title = this.title; // Card title
       this.innerHTML = `
         <ha-card header="${title}">
@@ -15,8 +14,6 @@ class HockeyNLCard extends HTMLElement {
       `;
       this.content = this.querySelector("div");
     }
-
-
 
     this.content.innerHTML = `
       <style>
@@ -69,63 +66,80 @@ class HockeyNLCard extends HTMLElement {
         }
     </style>
     `;
-    entityIdArray.forEach(entityId => {
+    entityIdArray.forEach((entityId) => {
       const curState = hass.states[entityId];
-      const date = new Date(curState.attributes.Date)
-      const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getFullYear()).padStart(2, '0')}`
-      const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
-      const homeTeamClubParts = curState.attributes.Home.name.split(" ")
-      const homeTeamName = homeTeamClubParts.pop()
-      const homeTeamClub = homeTeamClubParts.join(" ")
-      const awayTeamClubParts = curState.attributes.Away.name.split(" ")
-      const awayTeamName = awayTeamClubParts.pop()
-      const awayTeamClub = awayTeamClubParts.join(" ")
+      const date = new Date(curState.attributes.date);
+      const formattedDate = `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getFullYear()).padStart(2, "0")}`;
+      const formattedTime = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+      const homeTeamClubParts = curState.attributes.home.name.split(" ");
+      const homeTeamName = homeTeamClubParts.pop();
+      const homeTeamClub = homeTeamClubParts.join(" ");
+      const awayTeamClubParts = curState.attributes.away.name.split(" ");
+      const awayTeamName = awayTeamClubParts.pop();
+      const awayTeamClub = awayTeamClubParts.join(" ");
+      const address = curState.attributes.location.facility.address;
+      // straat huisnr \n postcode plaats
 
+      const [line1, line2] = address.split("\n");
+
+      const parts1 = line1.trim().split(" ");
+      const huisnr = parts1.pop(); // last word
+      const straat = parts1.join(" ");
+
+      const parts2 = line2.trim().split(" ");
+      const postcode = parts2.shift(); // first word
+      const plaats = parts2.join(" ");
 
       this.content.innerHTML += `
         <div class="team-container">
           <div class="team">
-            <img src="${curState.attributes.Home.logo}" class="team-logo" alt="Home Team Logo">
+            <img src="${curState.attributes.home.logo}" class="team-logo" alt="Home Team Logo">
             <div class="team-name">${homeTeamClub}</div>
             <div class="team-name">${homeTeamName}</div>
           </div>
           <div class="match-data">
-            <div class="match-city">${curState.attributes.Location.address}</div>
+            <div class="match-city">${plaats}</div>
             <div class="match-date">${formattedDate}</div>
             <div class="match-time">${formattedTime}</div>
-            <div class="match-field">${curState.attributes.Location.field}</div>
+            <div class="match-field">${curState.attributes.location.field.name}</div>
           </div>
           <div class="team">
-            <img src="${curState.attributes.Away.logo}" class="team-logo" alt="Away Team Logo">
+            <img src="${curState.attributes.away.logo}" class="team-logo" alt="Away Team Logo">
             <div class="team-name">${awayTeamClub}</div>
             <div class="team-name">${awayTeamName}</div>
           </div>
         </div>
-      `});
+      `;
+    });
   }
 
-    // The user supplied configuration. Throw an exception and Home Assistant
-    // will render an error card.
+  // The user supplied configuration. Throw an exception and Home Assistant
+  // will render an error card.
   setConfig(config) {
-    if (!config.entities || !Array.isArray(config.entities) || config.entities.length === 0) {
-        throw new Error('You need to define an array of entities');
+    if (
+      !config.entities ||
+      !Array.isArray(config.entities) ||
+      config.entities.length === 0
+    ) {
+      throw new Error("You need to define an array of entities");
     }
     this.title = config.title ?? "Hockey wedstrijden";
 
     this.config = config;
   }
 
-    // The height of your card. Home Assistant uses this to automatically
-    // distribute all cards over the available columns.
-    getCardSize() {
-      return 3;
-    }
+  // The height of your card. Home Assistant uses this to automatically
+  // distribute all cards over the available columns.
+  getCardSize() {
+    return 3;
   }
+}
 
 customElements.define("hockeynl-card", HockeyNLCard);
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "hockeynl-card",
   name: "HockeyNL Card",
-  description: "Card to display field hockey matches of HockeyWeerelt (Dutch Hockey league)",
+  description:
+    "Card to display field hockey matches of HockeyWeerelt (Dutch Hockey league)",
 });
