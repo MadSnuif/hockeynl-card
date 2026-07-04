@@ -80,6 +80,18 @@ class HockeyNLCard extends HTMLElement {
         `;
         return; // Stop voor deze entiteit
       }
+      // === Geen wedstrijd gepland (alleen friendly_name/team aanwezig) ===
+      if (!curState.attributes.home || !curState.attributes.away) {
+        this.content.innerHTML += `
+          <div class="team-container">
+            <div class="team">
+              <div class="team-name">${curState.attributes.friendly_name}</div>
+              <div class="match-city">Geen wedstrijd gepland</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
       // =====================
     
       const date = new Date(curState.attributes.date);
