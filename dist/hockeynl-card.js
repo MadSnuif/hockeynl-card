@@ -68,28 +68,43 @@ class HockeyNLCard extends HTMLElement {
     `;
     entityIdArray.forEach((entityId) => {
       const curState = hass.states[entityId];
+    
+      // === NIEUWE CHECK ===
+      if (!curState) {
+        this.content.innerHTML += `
+          <div class="team-container">
+            <div class="team">
+              <div class="team-name">Entiteit '${entityId}' nu niet aanwezig</div>
+            </div>
+          </div>
+        `;
+        return; // Stop voor deze entiteit
+      }
+      // =====================
+    
       const date = new Date(curState.attributes.date);
       const formattedDate = `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getFullYear()).padStart(2, "0")}`;
       const formattedTime = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+    
       const homeTeamClubParts = curState.attributes.home.name.split(" ");
       const homeTeamName = homeTeamClubParts.pop();
       const homeTeamClub = homeTeamClubParts.join(" ");
+    
       const awayTeamClubParts = curState.attributes.away.name.split(" ");
       const awayTeamName = awayTeamClubParts.pop();
       const awayTeamClub = awayTeamClubParts.join(" ");
+    
       const address = curState.attributes.location.facility.address;
-      // straat huisnr \n postcode plaats
-
       const [line1, line2] = address.split("\n");
-
+    
       const parts1 = line1.trim().split(" ");
-      const huisnr = parts1.pop(); // last word
+      const huisnr = parts1.pop();
       const straat = parts1.join(" ");
-
+    
       const parts2 = line2.trim().split(" ");
-      const postcode = parts2.shift(); // first word
+      const postcode = parts2.shift();
       const plaats = parts2.join(" ");
-
+    
       this.content.innerHTML += `
         <div class="team-container">
           <div class="team">
