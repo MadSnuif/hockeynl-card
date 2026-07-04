@@ -85,7 +85,6 @@ class HockeyNLCard extends HTMLElement {
         this.content.innerHTML += `
           <div class="team-container">
             <div class="team">
-              <img src="${curState.attributes.home.logo}" class="team-logo" alt="Home Team Logo">
               <div class="team-name">${curState.attributes.friendly_name}</div>
               <div class="match-city">Geen wedstrijd gepland</div>
             </div>
